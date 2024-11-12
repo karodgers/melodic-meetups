@@ -23,7 +23,7 @@ func HandleGeolocation(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Hardcoded Google Maps API key
-	apiKey := "guT4g7UQnNdnfC4FixSO7DqpjJBDRFsL7v89YXkUMvk"
+	apiKey := "??"
 
 	// Render the map template
 	tmpl := template.Must(template.ParseFiles("templates/geolocation.html"))
