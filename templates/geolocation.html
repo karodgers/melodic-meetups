@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Melodic Meetups | Login</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <!-- HERE Maps CSS and Scripts (core libraries) -->
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script> <!--Contains core map functionality-->
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script> <!--Contains services like geocoding-->
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script> <!--Adds a user interface (UI) with map controls like zoom.-->
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script> <!-- Enables map events like drag and zoom-->
+    <link rel="stylesheet" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css"/>
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+            margin: 20px 0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/" class="logo">
+                <img src="/images/logo.png" alt="Melodic Meetups Logo" class="logo-image">
+            </a>
+            <div class="nav-links">
+                <a href="/" class="nav-button cta-button">Back Home</a>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <br>
+        <br>
+        <section>
+            <div id="map"></div>
+            <script>
+                // initialize the map and all related services when page loads
+                function initMap() {
+                    const platform = new H.service.Platform({
+                        'apikey': '{{.APIKey}}'
+                    });
+
+                    // uses HERE API to set up default map layers, like roads and satellite views
+                    const defaultLayers = platform.createDefaultLayers();
+
+                    // Initializes the map
+                    const map = new H.Map(
+                        document.getElementById('map'),
+                        defaultLayers.vector.normal.map,
+                        {
+                            zoom: 10,
+                            pixelRatio: window.devicePixelRatio || 1
+                        }
+                    );
+
+                    window.addEventListener('resize', () => map.getViewPort().resize());
+                    
+                    // Adds default map behavior(e.g. drag, zoom)
+                    const behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+                    
+                    // Creates a UI with map controls (zoom buttons, etc.)
+                    const ui = H.ui.UI.createDefault(map, defaultLayers);
+
+                    // Initializes the geocoding service, allowing address-to-coordinate conversion.
+                    const geocodingService = platform.getSearchService();
+
+                    // Sends a geocoding request
+                    geocodingService.geocode({
+                        q: '{{.Location}}'
+                    }, (result) => {
+                        if (result.items.length > 0) {
+                            // retrieves cordinates
+                            const coordinates = result.items[0].position;
+                            // centers map based on markers cordinates
+                            const marker = new H.map.Marker(coordinates);
+                            map.addObject(marker);
+                            map.setCenter(coordinates);
+                        } else {
+                            alert('Location not found');
+                        }
+                    }, (error) => {
+                        alert('Geocoding failed: ' + error.message);
+                    });
+                }
+
+                window.onload = initMap;
+            </script>
+        </section>
+    </main>
+    <footer>
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3 class="footer-logo">Melodic Meetups</h3>
+                    <p>Your ultimate concert guide. Discover, book, and experience the magic of live music.</p>
+                </div>
+                <div class="footer-column">
+                    <h4>Explore</h4>
+                    <ul class="footer-links">
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="#">Events</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Follow Us</h4>
+                    <div class="social-icons">
+                        <a href="https://github.com/karodgers/" target="_blank"><span class="icon">🔗</span>karodgers</a>
+                        <a href="https://github.com/SidneyOps75" target="_blank"><span class="icon">🔗</span>johopiyo</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Newsletter</h4>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Enter your email" required>
+                        <button type="submit">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Melodic Meetups. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - {{.StatusCode}}</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <br>
+        <br>
+        <br>
+        <br>
+        <div class="error-container">
+            <div class="status-code dancing-script-hero" data-text="{{.StatusCode}}">{{.StatusCode}}</div>
+            <p class="error-message">{{.ErrorMessage}}</p>
+            <a href="/" class="error-button">Return to Home</a>
+        </div> 
+    </div>
+</body>
+</html>
